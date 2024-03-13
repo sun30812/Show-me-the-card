@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Show me the card</string>
+    <string name="card_detail">카드 세부사항</string>
+    <string name="cards">카드 목록</string>
+</resources>

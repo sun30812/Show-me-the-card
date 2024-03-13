@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Show me the card</string>
+    <string name="card_detail">Card Detail</string>
+    <string name="cards">Cards</string>
+</resources>
