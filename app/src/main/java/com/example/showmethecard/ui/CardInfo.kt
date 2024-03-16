@@ -35,7 +35,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -62,7 +61,6 @@ fun CardInfo(
     }
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomEnd
     ) {
         Column(Modifier.verticalScroll(rememberScrollState())) {
             CardInformation(card)
@@ -74,7 +72,16 @@ fun CardInfo(
             )
             Spacer(modifier = Modifier.height(80.dp))
         }
-        ExpectedPoint(card, 80.dp, viewModel::calculateTotalMoney, viewModel::calculateTotalBenefit)
+        ExpectedPoint(
+            card, viewModel::calculateTotalMoney, viewModel::calculateTotalBenefit,
+            Modifier
+                .background(
+                    color = MaterialTheme.colorScheme.secondaryContainer
+                )
+                .align(Alignment.BottomCenter)
+                .shadow(0.5.dp)
+                .height(80.dp)
+        )
     }
 }
 
@@ -200,16 +207,11 @@ fun CardCalculator(
 
 @Composable
 private fun ExpectedPoint(
-    card: PayCard, height: Dp, calculateTotalMoney: () -> Int,
-    calculateTotalBenefit: () -> Int
+    card: PayCard, calculateTotalMoney: () -> Int,
+    calculateTotalBenefit: () -> Int, modifier: Modifier
 ) {
     Box(
-        modifier = Modifier
-            .background(
-                color = MaterialTheme.colorScheme.secondaryContainer
-            )
-            .shadow(0.5.dp)
-            .height(height)
+        modifier = modifier
     ) {
         var totalUsageMoney by remember {
             mutableIntStateOf(0)
