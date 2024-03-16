@@ -3,8 +3,11 @@ package com.example.showmethecard.service
 import com.example.showmethecard.model.CardType
 import com.example.showmethecard.model.PayCard
 
-class CardRepository {
-    fun getCardList() =
+/**
+ * 테스트 및 개발용을 목적으로 설계된 [PayCard] 저장소
+ */
+class SamplePayCardRepository : PayCardRepository {
+    override fun getCardList() =
         listOf(
             PayCard(
                 id = "dkfmk32-343",
@@ -85,8 +88,8 @@ class CardRepository {
 
         )
 
-    fun searchCard(cardId: String) = getCardList().find {
-        it.id == cardId
+    override fun searchCard(cardID: String) = getCardList().find {
+        it.id == cardID
     }
 
 }

@@ -23,7 +23,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.showmethecard.ui.CardInfo
+import com.example.showmethecard.ui.CardInfoPage
 import com.example.showmethecard.ui.CardList
 import com.example.showmethecard.ui.theme.ShowMeTheCardTheme
 
@@ -61,7 +61,7 @@ private fun MainScreen(navController: NavHostController) {
                         type = NavType.StringType
                     })
                 ) {
-                    CardInfo(cardId = it.arguments?.getString("cardId") ?: "")
+                    CardInfoPage(cardId = it.arguments?.getString("cardId") ?: "")
                 }
             }
         }

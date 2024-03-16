@@ -2,13 +2,20 @@ package com.example.showmethecard.viewModel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.showmethecard.service.CardRepository
+import com.example.showmethecard.model.PayCard
+import com.example.showmethecard.service.PayCardRepository
+import com.example.showmethecard.service.SamplePayCardRepository
 
 class CardInfoViewModel(
-    repository: CardRepository = CardRepository(),
+    repository: PayCardRepository = SamplePayCardRepository(),
     cardId: String
 ) : ViewModel() {
     private var _card = repository.searchCard(cardId)
+
+    /**
+     * 결제 카드
+     * @see [PayCard]
+     */
     val card get() = _card
     private var _usageExtraMoney = if ((_card != null) && (_card!!.extraPoints != null)) {
         _card!!.extraPoints!!.keys.associate {
@@ -17,6 +24,10 @@ class CardInfoViewModel(
     } else {
         mapOf()
     }
+
+    /**
+     * 각 특별 적립 및 할인 사용처 별 사용 금액
+     */
     val usageExtraMoney get() = _usageExtraMoney
 
     var usageMoney = mutableStateOf("")
@@ -47,7 +58,7 @@ class CardInfoViewModel(
     }
 
     /**
-     * 실적이 인정되는 금액을 계산해주는 메서드
+     * 실적이 인정되는 기타 가맹점 사용 금액을 계산해주는 메서드
      */
     private fun calculateUsageMoney(): Int =
         (usageMoney.value.replace(",", "").toIntOrNull() ?: 0) + (giftCardMoney.value.replace(
@@ -56,7 +67,7 @@ class CardInfoViewModel(
         ).toIntOrNull() ?: 0)
 
     /**
-     *
+     * 추가 영역(특별 적립 및 할인 영역)에서 사용한 금액을 합산하는 메서드
      */
     private fun calculateExtraMoney(): Int {
         if (_usageExtraMoney.keys.isEmpty()) {
@@ -67,6 +78,9 @@ class CardInfoViewModel(
             .reduce { acc, i -> acc + i }
     }
 
+    /**
+     * 실적이 인정되는 금액을 계산해주는 메서드
+     */
     fun calculateTotalMoney(): Int = calculateUsageMoney() + calculateExtraMoney()
 
 }

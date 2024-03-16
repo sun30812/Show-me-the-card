@@ -45,8 +45,14 @@ import com.example.showmethecard.viewModel.CardInfoViewModel
 import com.example.showmethecard.viewModel.ViewModelForNavigationFactory
 
 
+/**
+ * 카드에 대한 정보를 소개하는 페이지이다.
+ *
+ * [cardId]에 카드의 ID를 기입하면 된다.
+ * @see PayCard
+ */
 @Composable
-fun CardInfo(
+fun CardInfoPage(
     navController: NavController = rememberNavController(),
     cardId: String,
     viewModel: CardInfoViewModel = viewModel(
@@ -85,6 +91,12 @@ fun CardInfo(
     }
 }
 
+/**
+ * 카드 혜택에 관한 간략한 정보를 제공하는 위젯
+ *
+ * 카드 혜택에 대해 간략한 안내 및 카드를 소개하는 위젯이다.
+ * [card]에 카드 정보를 기입하면 된다.
+ */
 @Composable
 private fun CardInformation(
     card: PayCard
@@ -119,6 +131,13 @@ private fun CardInformation(
     }
 }
 
+/**
+ * 카드 혜택 계산기
+ *
+ * 카드의 혜택을 계산해주는 위젯으로 [card]에 카드를 넣고, [usageMoney]에
+ * 사용 금액, [giftCardMoney]에 상품권 구매 금액, [usageExtraMoney]에
+ * 특별 할인 및 적립처 정보를 기입하면 된다.
+ */
 @Composable
 fun CardCalculator(
     card: PayCard,
@@ -205,6 +224,15 @@ fun CardCalculator(
 
 }
 
+/**
+ * 카드 정보 맨 하단에 표시되는 위젯
+ *
+ * 카드 정보 맨 하단에 혜택 계산기에 입력한 정보를 바탕으로 실적 반영 금액과
+ * 예상 혜택을 알려준다. [card]에 카드를, [calculateTotalMoney]에는 총 이용 금액을
+ * 구하는 메소드를, [calculateTotalBenefit]에는 예상 혜택을 계산하는 메서드를
+ * 전달하면 된다.
+ *
+ */
 @Composable
 private fun ExpectedPoint(
     card: PayCard, calculateTotalMoney: () -> Int,
