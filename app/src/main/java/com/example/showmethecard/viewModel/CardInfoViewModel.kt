@@ -23,9 +23,33 @@ class CardInfoViewModel(
     var giftCardMoney = mutableStateOf("")
 
     /**
+     * 카드의 예상 혜택을 계산하는 메서드
+     */
+    fun calculateTotalBenefit(): Int {
+        if (card == null) {
+            return 0
+        }
+        val extraMoney = usageExtraMoney.mapValues {
+            (it.value.value.toIntOrNull() ?: 0)
+        }
+        val giftCardMoney = giftCardMoney.value.toIntOrNull() ?: 0
+        var calculatePoint = _card!!.calculatePoint(
+            calculateUsageMoney() - giftCardMoney, giftCardMoney, 0, extraMoney
+        )
+
+        if (_card?.bonus != null) {
+            val totalExtraMoney = extraMoney.values.reduce { acc, i -> acc + i }
+            calculatePoint += (if (calculateUsageMoney() + totalExtraMoney >= _card!!.bonus!!.second)
+                _card!!.bonus!!.first else 0
+                    )
+        }
+        return calculatePoint
+    }
+
+    /**
      * 실적이 인정되는 금액을 계산해주는 메서드
      */
-    fun calculateUsageMoney(): Int =
+    private fun calculateUsageMoney(): Int =
         (usageMoney.value.replace(",", "").toIntOrNull() ?: 0) + (giftCardMoney.value.replace(
             ",",
             ""
@@ -34,7 +58,7 @@ class CardInfoViewModel(
     /**
      *
      */
-    fun calculateExtraMoney(): Int {
+    private fun calculateExtraMoney(): Int {
         if (_usageExtraMoney.keys.isEmpty()) {
             return 0
         }

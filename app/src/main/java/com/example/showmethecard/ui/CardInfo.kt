@@ -66,11 +66,15 @@ fun CardInfo(
     ) {
         Column(Modifier.verticalScroll(rememberScrollState())) {
             CardInformation(card)
-            CardCalculator(card = card, giftCardMoney = viewModel.giftCardMoney, usageMoney = viewModel.usageMoney,
-                usageExtraMoney = viewModel.usageExtraMoney)
+            CardCalculator(
+                card = card,
+                giftCardMoney = viewModel.giftCardMoney,
+                usageMoney = viewModel.usageMoney,
+                usageExtraMoney = viewModel.usageExtraMoney
+            )
             Spacer(modifier = Modifier.height(80.dp))
         }
-        ExpectedPoint(card, 80.dp, viewModel::calculateTotalMoney)
+        ExpectedPoint(card, 80.dp, viewModel::calculateTotalMoney, viewModel::calculateTotalBenefit)
     }
 }
 
@@ -120,51 +124,6 @@ fun CardCalculator(
     Column(Modifier.padding(8.0.dp)) {
         Text("혜택 계산기", style = MaterialTheme.typography.titleLarge)
         Column {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    text = "사용 금액: ",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier
-                        .padding(8.0.dp)
-                )
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    TextField(
-                        value = usageMoney.value, onValueChange = {
-                                                            usageMoney.value = it
-                        },
-                        Modifier.padding(8.0.dp),
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Done
-                        )
-                    )
-                    Text(text = "원")
-                }
-            }
-
-            if (card.isAbleGiftCard) {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = "상품권 총 구매 금액: ",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier
-                            .padding(8.0.dp)
-                    )
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        TextField(
-                            value = giftCardMoney.value, onValueChange = {
-                                                                   giftCardMoney.value = it
-                            },
-                            Modifier.padding(8.0.dp),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Number,
-                                imeAction = ImeAction.Done
-                            )
-                        )
-                        Text(text = "원")
-                    }
-                }
-            }
 
             dataList.forEach { item ->
                 Column(modifier = Modifier.fillMaxWidth()) {
@@ -190,13 +149,60 @@ fun CardCalculator(
                 }
 
             }
+            if (card.isAbleGiftCard) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "상품권 총 구매 금액: ",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier
+                            .padding(8.0.dp)
+                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        TextField(
+                            value = giftCardMoney.value, onValueChange = {
+                                giftCardMoney.value = it
+                            },
+                            Modifier.padding(8.0.dp),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number,
+                                imeAction = ImeAction.Done
+                            )
+                        )
+                        Text(text = "원")
+                    }
+                }
+            }
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "기타 실적 반영 가맹점: ",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier
+                        .padding(8.0.dp)
+                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    TextField(
+                        value = usageMoney.value, onValueChange = {
+                            usageMoney.value = it
+                        },
+                        Modifier.padding(8.0.dp),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done
+                        )
+                    )
+                    Text(text = "원")
+                }
+            }
         }
     }
 
 }
 
 @Composable
-private fun ExpectedPoint(card: PayCard, height: Dp, calculateTotalMoney: () -> Int) {
+private fun ExpectedPoint(
+    card: PayCard, height: Dp, calculateTotalMoney: () -> Int,
+    calculateTotalBenefit: () -> Int
+) {
     Box(
         modifier = Modifier
             .background(
@@ -206,6 +212,9 @@ private fun ExpectedPoint(card: PayCard, height: Dp, calculateTotalMoney: () -> 
             .height(height)
     ) {
         var totalUsageMoney by remember {
+            mutableIntStateOf(0)
+        }
+        var totalBenefit by remember {
             mutableIntStateOf(0)
         }
         Row(
@@ -219,11 +228,12 @@ private fun ExpectedPoint(card: PayCard, height: Dp, calculateTotalMoney: () -> 
             ) {
 
                 Text(text = "실적 반영 금액: ${totalUsageMoney}원")
-                Text(text = "예상 혜택: ${card.type}")
+                Text(text = "예상 혜택: $totalBenefit ${card.type}")
 
             }
             Button(modifier = Modifier.padding(8.0.dp), onClick = {
                 totalUsageMoney = calculateTotalMoney()
+                totalBenefit = calculateTotalBenefit()
             }) {
                 Text(text = "계산하기")
             }
@@ -253,5 +263,10 @@ fun CardCalculatorPreview(
         mutableStateOf("")
     }
 
-    CardCalculator(card = card, giftCardMoney = giftCardMoney, usageMoney = usageMoney, usageExtraMoney = mapOf())
+    CardCalculator(
+        card = card,
+        giftCardMoney = giftCardMoney,
+        usageMoney = usageMoney,
+        usageExtraMoney = mapOf()
+    )
 }

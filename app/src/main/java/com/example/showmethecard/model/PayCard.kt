@@ -69,7 +69,7 @@ enum class CardType {
              val extraMoney = usageExtraMoney?.values?.reduce { acc, i -> acc+i } ?: 0
              it <= (usageMoney + (if (isAbleGiftCard) giftCardMoney else 0) + extraMoney) / 10000
          }
-         var result = (usageMoney + (if (isDiscountGiftCard) giftCardMoney else 0)) *
+        var result = (usageMoney + ((if (isDiscountGiftCard) giftCardMoney else 0))) *
                  (point * (((if ((target != null) && (isBoostApplyForAll == true)) boost?.get(target)
                      ?: 1 else 1))).toDouble() / 100)
          if (usageExtraMoney != null) {
@@ -84,6 +84,9 @@ enum class CardType {
                  }
              }
          }
+        if (limit == 0) {
+            return result.toInt()
+        }
          return if (result > limit) limit else result.toInt()
      }
  }
