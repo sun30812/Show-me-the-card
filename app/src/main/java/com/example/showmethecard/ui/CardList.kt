@@ -13,15 +13,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.showmethecard.viewModel.CardListViewModel
 
+@Preview(showBackground = true)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardList(
     viewModel: CardListViewModel = viewModel(),
-    onNavigateButtonClick: (String) -> Unit
+    onNavigateButtonClick: (String) -> Unit = {}
 ) {
     val cardList by viewModel.cardList.collectAsState()
     LazyColumn {
