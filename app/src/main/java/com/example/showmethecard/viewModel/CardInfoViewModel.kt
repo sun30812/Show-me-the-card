@@ -2,15 +2,17 @@ package com.example.showmethecard.viewModel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.showmethecard.model.PayCard
 import com.example.showmethecard.service.PayCardRepository
 import com.example.showmethecard.service.SamplePayCardRepository
 
 class CardInfoViewModel(
     repository: PayCardRepository = SamplePayCardRepository(),
-    cardId: String
+    cardID: String
 ) : ViewModel() {
-    private var _card = repository.searchCard(cardId)
+    private var _card = repository.searchCard(cardID)
 
     /**
      * 결제 카드
@@ -32,6 +34,14 @@ class CardInfoViewModel(
 
     var usageMoney = mutableStateOf("")
     var giftCardMoney = mutableStateOf("")
+
+    companion object {
+        fun Factory(cardID: String) = viewModelFactory {
+            initializer {
+                CardInfoViewModel(cardID = cardID)
+            }
+        }
+    }
 
     /**
      * 카드의 예상 혜택을 계산하는 메서드

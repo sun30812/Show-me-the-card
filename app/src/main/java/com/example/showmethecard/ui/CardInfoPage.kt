@@ -31,18 +31,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.showmethecard.model.PayCard
 import com.example.showmethecard.sample.CardPreviewParameterProvider
 import com.example.showmethecard.viewModel.CardInfoViewModel
-import com.example.showmethecard.viewModel.ViewModelForNavigationFactory
 
 
 /**
@@ -53,12 +51,9 @@ import com.example.showmethecard.viewModel.ViewModelForNavigationFactory
  */
 @Composable
 fun CardInfoPage(
-    navController: NavController = rememberNavController(),
     cardId: String,
     viewModel: CardInfoViewModel = viewModel(
-        factory = ViewModelForNavigationFactory(
-            navController = navController, cardId = cardId
-        )
+        factory = CardInfoViewModel.Factory(cardId)
     )
 ) {
     val card = viewModel.card ?: return Column {
@@ -103,7 +98,10 @@ private fun CardInformation(
 ) {
     val dataList = card.extraPoints?.keys?.toList() ?: listOf()
     Column(Modifier.padding(8.0.dp)) {
-        Text("카드 정보", style = MaterialTheme.typography.titleLarge)
+        Text(
+            card.name,
+            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold)
+        )
         Text(text = card.description)
         Card(Modifier.padding(8.0.dp)) {
             Text(

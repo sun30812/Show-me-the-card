@@ -13,21 +13,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.showmethecard.viewModel.CardListViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.example.showmethecard.viewModel.ViewModelForNavigationFactory
+import com.example.showmethecard.viewModel.CardListViewModel
 
-@Preview(showBackground = true)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardList(
-    navController: NavController = rememberNavController(),
-    viewModel: CardListViewModel = viewModel(factory = ViewModelForNavigationFactory(navController = navController))
+    viewModel: CardListViewModel = viewModel(),
+    onNavigateButtonClick: (String) -> Unit
 ) {
     val cardList by viewModel.cardList.collectAsState()
     LazyColumn {
@@ -39,7 +33,7 @@ fun CardList(
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant
                 ),
-                onClick = { viewModel.onCardClick(cardList[it].id) }) {
+                onClick = { onNavigateButtonClick("cards/${cardList[it].id}") }) {
                 Column(Modifier.padding(12.dp)) {
                     Text(text = cardList[it].name, style = MaterialTheme.typography.titleLarge)
                     Text(
